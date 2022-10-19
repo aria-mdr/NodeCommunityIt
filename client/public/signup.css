@@ -1,0 +1,7 @@
+body .errorToast:not(.show) {
+    display: block;
+    position: fixed;
+    top: 17px;
+    right: 21px;
+
+}
