@@ -9,6 +9,18 @@ const storeUser = async (userData) => {
     }
 }
 
+const getUser = async (email) => {
+    try {
+        const user = userModel.findOne({
+            email: email
+        })
+        return user
+    } catch (error) {
+        throw 'unable to find user'
+    }
+
+}
 module.exports = {
-    storeUser
+    storeUser,
+    getUser
 }

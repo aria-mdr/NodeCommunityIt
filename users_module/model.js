@@ -1,6 +1,7 @@
-const {getConnection, Schema, mongoose} = require('../db/mongoose')
+const {getConnection, Schema, mongoose} = require('../db/db')
 getConnection();
 
+// define schema for our collection
 const userSchema = new Schema({
   name:    String,
   email: {
@@ -23,6 +24,7 @@ const userSchema = new Schema({
   }
 })
 
+// create a model, or collection
 const userModel = mongoose.model('Users', userSchema)
 
 // a method to confirm password

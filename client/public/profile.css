@@ -1,0 +1,11 @@
+.card{
+    border-radius: 0.5rem;
+        background-color: cornflowerblue;
+        color: white;
+}
+
+.text-muted {
+    --bs-text-opacity: 1;
+    /* color: #6c757d!important; */
+    color: white;
+}
