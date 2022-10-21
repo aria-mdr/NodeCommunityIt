@@ -1,10 +1,10 @@
 const userModel = require('./model.js')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { createToken } = require('./auth')
 const storeUser = async (userData) => {
 
     try {
-        const password = await bcrypt.hash(userData.password, 10)
+        const password = await bcrypt.hashSync(userData.password, 10)
         const user = new userModel({
             ...userData,
             password
@@ -55,7 +55,7 @@ const login = async (userData) => {
                 code: 404
             }
         }
-        const passwordMatch = await bcrypt.compare(userData.password, user.password)
+        const passwordMatch = await bcrypt.compareSync(userData.password, user.password)
         if(!passwordMatch) {
             throw {
                 msg: "Invalid login information", 
