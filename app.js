@@ -4,6 +4,9 @@ const bodyParser = require('body-parser'); // it parses the body of HTTP request
 const { engine } = require('express-handlebars'); // bring in handelbars function
 const { getConnection } = require('./db/db'); // our data base driver
 const userService = require('./users_module/service');
+const cookieParser = require("cookie-parser");
+const { auth } = require('./users_module/auth')
+
 
 
 const app = express(); // creating an express app, an object that contains all of the express logic
@@ -19,6 +22,7 @@ app.set('view engine', 'handlebars'); // tell express we want to use handelbars 
 
 app.use(express.static(path.join(__dirname, './client/public'))) // for every request, include these static files in the response
 app.use(bodyParser.json()) // we want to use body-parses as a middelware
+app.use(cookieParser());
 
 /* defining routes */
 app.get('/', (req, res) => {
@@ -32,17 +36,47 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, '/client/login.html'));
 })
 
+app.post('/login', async (req, res) => {
+    const body = req.body
+
+    if(!body.email || !body.password || !body.email.includes('@') || body.password.length === 0) {
+        res.status(400).json({
+            error: "Invalid User Information, Please check your input"
+        })
+        return;
+    }
+
+    try {
+        // object destruction, taking fields out of an object as a variable
+        const { userId, token } = await userService.login(body)
+        if(userId && token) {
+            res.cookie('token', token, {maxAge: 900000});
+            res.status(200).json({
+                userId,
+                token
+            })
+        }
+    } catch (error) {
+        console.log('caught error in controller')
+        console.log(error)
+        res.status(error.code).json({
+            error: error.msg
+        })
+    }
+
+
+})
+
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '/client/signup.html'))
 })
 
 app.post('/signup', async (req, res) => {
-    console.log(req.body)
     try {
         await userService.storeUser(req.body)
     } catch(err) {
-        res.status(400).json({
-            error: err
+        res.status(err.code).json({
+            error: err.msg
         })
         return
     }
@@ -64,6 +98,26 @@ app.get('/user/:email', (req, res) => {
         dob: user.dob,
         bio: user.bio,
     })
+})
+
+app.get('/dashboard', auth, async (req, res) => {
+    try {
+        const user = await userService.getUserById(req.userId)
+        res.render('dashboard', {
+            layout: 'profile',
+            name: user.name, 
+            email: user.email,
+            course: user.course,
+            address: user.address,
+            dob: user.dob,
+            bio: user.bio,
+        })
+    } catch(error) {
+        res.redirect('/login')
+        res.end()
+        return
+    }
+
 })
 
 

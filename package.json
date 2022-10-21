@@ -19,10 +19,13 @@
   },
   "homepage": "https://github.com/aria-mdr/NodeCommunityIt#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
     "express": "^4.18.1",
     "express-handlebars": "^6.0.6",
     "handlebars": "^4.7.7",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.5"
   },
   "devDependencies": {

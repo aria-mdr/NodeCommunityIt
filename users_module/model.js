@@ -29,6 +29,11 @@ const userModel = mongoose.model('Users', userSchema)
 
 // a method to confirm password
 
+userModel.hash = (password) => {
+
+}
+
+userModel.comparePassword = (passw)
 // when ever a user is saved, you want to send an email
 
 module.exports = userModel

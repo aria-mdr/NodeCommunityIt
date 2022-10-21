@@ -22,7 +22,13 @@ const handelSignup = async () => {
             headers: {
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formValue) 
+            body: JSON.stringify({
+                password: formValue.pass1,
+                name: formValue.name,
+                email: formValue.email,
+                course: formValue.course,
+                terms: formValue.terms
+            }) 
         });
         console.log(response)
         if(response.status !== 200) {
