@@ -1,6 +1,6 @@
 const userModel = require("./model.js");
 const bcrypt = require("bcryptjs");
-const { createToken } = require("./auth");
+const { createToken } = require("./jwt");
 const storeUser = async (userData) => {
   try {
     const password = await bcrypt.hashSync(userData.password, 10);
@@ -69,9 +69,23 @@ const login = async (userData) => {
     token,
   };
 };
+
+const getUsers = async () => {
+  try {
+    const users = await userModel.find().lean();
+    return users;
+  } catch (err) {
+    throw {
+      msg: "unable to find users",
+      code: 500,
+    };
+  }
+}
+
 module.exports = {
   storeUser,
   getUser,
   login,
   getUserById,
+  getUsers,
 };

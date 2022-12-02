@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
+const { getUserById } = require("./service");
 const SECRECT_KEY = "SECRECT_KEY"
 
+// authentication - send to login page
 const auth = async (req, res, next) => {
     const cookies = req.cookies // read the cookies
         try {
@@ -20,15 +22,37 @@ const auth = async (req, res, next) => {
 
 }
 
-const createToken = async (userId) => {
-    return await jwt.sign(
-                {userId: userId},
-                SECRECT_KEY,
-                { expiresIn: "1h" }
-            )
+// authorization - send to home page
+const adminGaurd = async (req, res, next) => {
+    try {
+        if(!req.userId) {
+            throw "User needs to be logged in"
+        }
+
+        const user = await getUserById(req.userId)
+
+        if(!user) {
+            throw "User not found"
+        }
+
+        if(user.userType === 0) {
+            next()
+        } else {
+            throw "User not authorized"
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(401).redirect('/')
+        res.end()
+        return;
+    }
+
 }
+
+
 
 module.exports = {
     auth, 
-    createToken
+    adminGaurd,
+    SECRECT_KEY,
 }

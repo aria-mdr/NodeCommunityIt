@@ -5,7 +5,7 @@ const { engine } = require('express-handlebars'); // bring in handelbars functio
 const { getConnection } = require('./db/db'); // our data base driver
 const userService = require('./users_module/service');
 const cookieParser = require("cookie-parser");
-const { auth } = require('./users_module/auth')
+const { auth, adminGaurd } = require('./users_module/auth')
 
 
 
@@ -117,7 +117,20 @@ app.get('/dashboard', auth, async (req, res) => {
         res.end()
         return
     }
+})
 
+app.get('/users', auth, adminGaurd, async (req, res) => {
+    try {
+        const users = await userService.getUsers()
+        res.render('users', {
+            layout: false,
+            users,
+        })
+    } catch (error) {
+        res.status(error.code).json({
+            error: error.msg
+        })
+    }
 })
 
 

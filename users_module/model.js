@@ -21,7 +21,8 @@ const userSchema = new Schema({
   createdAt: {
     type: Date, 
     default: Date.now
-  }
+  },
+  userType: Number,
 })
 
 // create a model, or collection

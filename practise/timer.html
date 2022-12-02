@@ -1,0 +1,43 @@
+<style>
+    .timer-container {
+        width: 100%;
+        height: 1000px;
+        background-color: black;
+        color: white;
+        text-align: center;
+    }
+
+    #timer {
+        font-size: 60px;
+        line-height: 1000px;
+    }
+</style>
+
+<div class="timer-container">
+    <p id="timer">1:1:1</p>
+</div>
+
+<script>
+    const timer = document.getElementById('timer');
+    let secounds = 0;
+    let minute = 0;
+    let hour = 0
+    const setTimer = () => {
+        timer.innerHTML = `${hour}:${minute}:${secounds}`
+    } 
+
+    setTimer()
+
+    setInterval(() => {
+        console.log('inside interval')
+        secounds++;
+        if(secounds === 60) {
+            minute++;
+            secounds = 0;
+            if(minute === 60) {
+                hour++
+            }
+        }
+        setTimer();
+    }, 500)
+</script>
